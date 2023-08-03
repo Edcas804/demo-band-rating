@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Socket io</title>
+</head>
+<body>
+    <h1>
+        Socket io
+    </h1>
+    <div>
+        <form action="">
+            <input type="text" name="inputMsg" placeholder="Text">
+            <button>Enviar</button>
+        </form>
+        <div>
+           <ul id="contentMsg">
+           </ul>
+        </div>
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        let socket = io();
+
+        let form = document.querySelector('form');
+        let inputMsg = form['inputMsg'];
+        let content = document.querySelector('#contentMsg')
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            if (inputMsg.value) {
+                socket.emit('chat message', {msg: inputMsg.value, date: new Date()});
+                inputMsg.value = '';
+            }
+        });
+
+        socket.on('msg-server', (data) => {
+            let li = document.createElement('li')
+            li.innerHTML = `${data.msg} - ${data.date}`
+            content.append(li)
+        })
+    </script>
+</body>
+</html>
